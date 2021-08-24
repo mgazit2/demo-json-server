@@ -1,13 +1,37 @@
 <template>
-  <div id="nav">
-    <router-link :to="{name: 'EventList'}">EVENTS</router-link> |
-    <router-link to="/kimi">BWOAHHHHHHH!</router-link>
+  <div id="app">
+    <div id="flashMessage" v-if="GStore.flashMessage">
+      {{GStore.flashMessage}}
+    </div>
+    <div id="nav">
+      <router-link :to="{name: 'EventList'}">EVENTS</router-link> |
+      <router-link to="/kimi">BWOAHHHHHHH!</router-link>
+    </div>
+    <h1>TEST GLOBAL HEADING</h1>
+    <router-view />
   </div>
-  <h1>TEST GLOBAL HEADING</h1>
-  <router-view />
 </template>
 
+<script>
+export default {
+  inject: ['GStore']
+}
+</script>
+
 <style>
+@keyframes yellowfade {
+  from {
+    background: yellow;
+  }
+  to {
+    background: transparent;
+  }
+}
+
+#flashMessage {
+  animation-name: yellowfade;
+  animation-duration: 3s;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
