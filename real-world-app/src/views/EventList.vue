@@ -7,6 +7,7 @@
 <script>
 // @ is an alias to /src
 import EventCard from "@/components/EventCard.vue";
+import EventService from "@/services/EventService";
 
 export default {
   name: "EventList",
@@ -15,53 +16,17 @@ export default {
   },
   data() {
     return {
-      events: [
-        {
-          id: 1,
-          category: "food",
-          title: "foods",
-          description: "FOOD",
-          location: "FOOOOOOOD",
-          date: "fOoD",
-          time: "FoOd",
-          petsAllowed: true,
-          organizer: "doof"
-        },
-        {
-          id: 2,
-          category: "tuna",
-          title: "tunas",
-          description: "TUNA",
-          location: "TUUUUUUNA",
-          date: "tUnA",
-          time: "TuNa",
-          petsAllowed: true,
-          organizer: "anut"
-        },
-        {
-          id: 3,
-          category: "milk",
-          title: "milks",
-          description: "MILK",
-          location: "MIIIILK",
-          date: "mIlK",
-          time: "MiLk",
-          petsAllowed: true,
-          organizer: "klim"
-        },
-        {
-          id: 4,
-          category: "water",
-          title: "waters",
-          description: "WATER",
-          location: "WAAAAATER",
-          date: "wAtEr",
-          time: "WaTeR",
-          petsAllowed: true,
-          organizer: "retaw"
-        }
-      ]
+      events: null
     }
+  },
+  created() {
+    EventService.getEvents()
+    .then(response => {
+      this.events = response.data
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 };
 </script>

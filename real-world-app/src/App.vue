@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <router-link to="/">EVENTS</router-link> |
+    <router-link :to="{name: 'EventList'}">EVENTS</router-link> |
     <router-link to="/kimi">BWOAHHHHHHH!</router-link>
   </div>
   <h1>TEST GLOBAL HEADING</h1>
