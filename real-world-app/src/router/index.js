@@ -7,6 +7,9 @@ import EventRegister from "@/views/event/Register";
 import EventEdit from "@/views/event/Edit";
 import NotFound from "@/views/event/NotFound"
 import NetworkError from "../components/NetworkError"
+import NProgress from 'nprogress'
+import EventService from "@/services/EventService";
+import GStore from '@/store'
 
 const routes = [
   {
@@ -25,6 +28,24 @@ const routes = [
     name: "EventLayout,",
     props: true,
     component: EventLayout,
+    beforeEnter: to => {
+      // fetch event by id and set to local event
+      return EventService.getEvent(to.params.id)
+          .then(response => {
+            GStore.event = response.data
+          })
+          .catch(error => {
+            if (error.response.status == 404) {
+              return {
+                name: '404Resource',
+                params: {resource: 'event'}
+              }
+            } else {
+              return {name: 'NetworkError'}
+            }
+
+          })
+    },
     children: [
       {
         path: "",
@@ -39,7 +60,8 @@ const routes = [
       {
         path: "edit",
         name: "EventEdit",
-        component: EventEdit
+        component: EventEdit,
+        meta: {requireAuth: true}
       }
     ]
   },
@@ -70,6 +92,33 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior() {
+    /*if (savedPosition) {
+      return savedPosition
+    } else */
+    return {top:0}
+  },
 });
+
+router.beforeEach((to, from) => {
+  NProgress.start()
+  const notAuth = true
+  if (to.meta.requireAuth && notAuth) {
+    GStore.flashMessage = 'Like, no way am I letting you in there, man!'
+    setTimeout(() => {
+      GStore.flashMessage = ''
+    }, 3000)
+    if (from.href) {
+      return false
+    }
+    else {
+      return {path: '/'}
+    }
+  }
+})
+
+router.afterEach(() => {
+  NProgress.done()
+})
 
 export default router;
